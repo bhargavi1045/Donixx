@@ -85,7 +85,7 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 shadow-md backdrop-blur-lg transition-all duration-300 ${
-        isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        isDark ? "bg-gradient-to-t from-gray-950 to-slate-900 text-white" : "bg-white text-gray-900"
       }`}
     >
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">

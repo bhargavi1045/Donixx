@@ -3,6 +3,7 @@ import React from 'react'
 import { useTheme } from 'next-themes'
 import Navbar from '@/components/common/Navbar'
 import Footer from '@/components/common/Footer'
+import Hero from '@/components/landing/Hero'
 function Page() {
   const {resolvedTheme}=useTheme()
   const darkMode = resolvedTheme === "dark"
@@ -11,7 +12,8 @@ function Page() {
       darkMode  ? "bg-gradient-to-b dark:from-black dark:to-gray-900 text-white" : "bg-white text-gray-900"
     }`}>
       <Navbar />
-      It'z Donix
+      {/* It'z Donix */}
+      <Hero />
       <Footer darkMode={darkMode} />
     </div>
   )

@@ -16,8 +16,8 @@ import Link from "next/link";
 
 const Footer = ({ darkMode }) => {
   const bgGradient = darkMode
-    ? "from-purple-900 to-purple-800"
-    : "from-purple-950 to-purple-900";
+    ? "from-gray-950 to-slate-900"
+    : "from-gray-900 to-slate-600";
   const textColor = darkMode ? "text-purple-300" : "text-purple-200";
   const hoverTextColor = darkMode ? "hover:text-purple-300" : "hover:text-purple-200";
   const borderColor = darkMode ? "border-purple-700/50" : "border-purple-800/50";
