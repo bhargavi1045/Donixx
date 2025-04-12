@@ -59,6 +59,7 @@ export class RegisterController{
                 phone:string;
                 address:string;
                 role:string;
+                blockchainAddress: string;
             };
             await connectDatabase();
             
@@ -70,6 +71,7 @@ export class RegisterController{
                 phone:decoded.phone,
                 address:decoded.address,
                 role:decoded.role,
+                blockchainAddress: decoded.blockchainAddress,
             });
 
             // const newNotification = await Notification.create({

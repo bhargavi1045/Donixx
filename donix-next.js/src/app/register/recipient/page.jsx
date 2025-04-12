@@ -15,6 +15,7 @@ export default function UserRegistrationForm() {
     phone: "",
     address: "",
     role: "Recipient",
+    blockchainAddress: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -44,6 +45,22 @@ export default function UserRegistrationForm() {
     }
   };
 
+  const connectWallet = async () => {
+    if (!window.ethereum) {
+      toast.error("MetaMask is not installed!");
+      return;
+    }
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const address = accounts[0];
+      setFormData((prev) => ({ ...prev, blockchainAddress: address }));
+      toast.success("Wallet connected!");
+    } catch (err) {
+      console.error("MetaMask Error:", err);
+      toast.error("Failed to connect wallet.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -62,6 +79,7 @@ export default function UserRegistrationForm() {
     }
     if (!formData.address.trim()) newErrors.address = "Address is required.";
     if (!formData.password.trim()) newErrors.password = "Password is required.";
+    if (!formData.blockchainAddress.trim()) newErrors.blockchainAddress = "Please connect your wallet.";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -70,13 +88,12 @@ export default function UserRegistrationForm() {
     }
 
     try {
-      const { name, email, password, phone, address, role } = formData;
+      const { name, email, password, phone, address, role, blockchainAddress } = formData;
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/api/register/sign-up`,
-        { name, email, password, phone, address, role }
+        { name, email, password, phone, address, role, blockchainAddress }
       );
-      console.log("Response:", response.data);
-      toast.success("Verification Link has been sent to your email! Please check your inbox / spam.");
+      toast.success("Verification Link has been sent to your email!");
       setFormData({
         name: "",
         email: "",
@@ -84,10 +101,11 @@ export default function UserRegistrationForm() {
         phone: "",
         address: "",
         role: "Recipient",
+        blockchainAddress: "",
       });
     } catch (error) {
       console.error("Error:", error.response ? error.response.data : error.message);
-      toast.error(error.response?.data?.message || "Registration Failed. Please try again.");
+      toast.error(error.response?.data?.message || "Registration Failed.");
     } finally {
       setIsSubmitting(false);
     }
@@ -182,6 +200,23 @@ export default function UserRegistrationForm() {
               className={`w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:outline-none transition-colors ${darkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500 focus:border-blue-500' : 'bg-white border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`}
             />
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+          </div>
+
+          {/* Blockchain Wallet */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Blockchain Wallet *
+            </label>
+            <button
+              type="button"
+              onClick={connectWallet}
+              className="w-full p-3 font-medium rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+            >
+              {formData.blockchainAddress
+                ? `Connected: ${formData.blockchainAddress.slice(0, 6)}...${formData.blockchainAddress.slice(-4)}`
+                : "Connect MetaMask Wallet"}
+            </button>
+            {errors.blockchainAddress && <p className="text-red-500 text-sm mt-1">{errors.blockchainAddress}</p>}
           </div>
           
           <button
