@@ -5,6 +5,7 @@ import Navbar from '@/components/common/Navbar'
 import Footer from '@/components/common/Footer'
 import Hero from '@/components/landing/Hero'
 import WhyChooseDonix from '@/components/landing/WhyChoseDonix'
+import HowItWorks from '@/components/landing/HowItWorks'
 function Page() {
   const {resolvedTheme}=useTheme()
   const darkMode = resolvedTheme === "dark"
@@ -16,6 +17,7 @@ function Page() {
       {/* It'z Donix */}
       <Hero />
       <WhyChooseDonix />
+      <HowItWorks darkMode={darkMode} />
       <Footer darkMode={darkMode} />
     </div>
   )
