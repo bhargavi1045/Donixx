@@ -1,93 +1,44 @@
-# Donix - Organ Donation Platform
+# Donix
 
-Donix is an advanced organ donation and recipient matching platform designed to connect donors and recipients seamlessly. It leverages AI-powered health tracking, a robust two-level administrative approval system, and a post-donation health reminder system to ensure a safe and efficient organ donation process.
+## **Problem Statement** 
 
----
+- Despite rapid advancements in medical technology, organ donation in India still faces several challenges. The current system is mostly manual, unorganized, and lacks awareness among the general public. Many potential donors are unaware of the process, and even those who wish to contribute face difficulty in registering and finding the right hospital or authority. There is also a major gap in interpreting complex medical reports and ensuring proper post-donation care. This results in low donor participation, delayed decision-making, and poor follow-up for patients.
 
-## 1️⃣ Features Overview
+- There is a strong need for a centralized and digital platform that can simplify the entire donation process — from registration and hospital discovery to AI-powered medical report analysis and continuous post-donation support. Such a system can not only promote awareness but also bring transparency, improve medical coordination, and increase the efficiency of organ donation across the country.
 
-### *Home Page*
-- User registration
-- Hospital registration
-- Articles on healthcare and organ donation
-- List of registered hospitals
-- AI-powered chatbot for guidance
-- Secure login system
+## **Our Solution - Donix**
+ 
+**Donix is a next-generation digital platform designed to revolutionize the organ donation ecosystem in India by bridging the critical gaps in awareness, accessibility, and post-donation care. Through a carefully integrated suite of AI-powered and user-friendly features, Donix simplifies the entire journey for donors, recipients, medical professionals, and healthcare institutions.**
 
-### *Login System (Three Roles)*
-1. *User*:
-   - Request organs, donate organs, write articles, engage in chat, and use AI-generated tasks for medical guidance.
-2. *Hospital*:
-   - Manage organ and donation requests, oversee staff, and coordinate transplant procedures.
-3. *Super Admin*:
-   - Verify hospitals, regulate articles, and ensure smooth operational workflows.
+## Why Donix Stands Out
 
----
+- **AI-based Donor-Recipient Compatibility Matching** - Intelligent matching based on blood type, organ type, urgency level, and geographic proximity.
 
-## 2️⃣ Key Features
+- **AI Medical Report Analysis** - Users can upload their medical reports and receive instant AI-generated insights, reducing dependency on long wait times for interpretations and enabling early decisions for both donors and recipients.
 
-### *User Features*
-- *Find & Request Organ*: Search for available organs or request a specific organ.
-- *Donate Organ*: Pledge organ donations and list available organs.
-- *Write Articles*: Contribute medical or awareness articles for the community.
-- *Multi-User Chat*: Enables discussions between patients, donors, and medical experts.
-- *AI Task Generation*: AI analyzes medical reports to suggest necessary actions.
+- **AI-Driven Recovery Routine** - Post-donation care is personalized using AI-generated health routines and reminders, ensuring donors and recipients get timely attention, diet alerts, exercise guidance, and medication schedules.
 
-### *Hospital Features*
-- *Manage Donation Requests*: Accept or reject organ donations.
-- *Handle Organ Requests*: Search for and request organs.
-- *Staff Management*: Manage hospital medical teams efficiently.
+- **Smart Notifications and Status Updates** - Automatic SMS/email updates for important events — match found, appointment reminders, post-care alerts, etc.
 
-### *Super Admin Features*
-- *Article Regulation*: Ensure only verified and reliable articles are published.
-- *Hospital Verification*: Confirm the authenticity of hospitals and their services.
+- **Community Awareness Hub** - To boost public participation, Donix features a dedicated space for sharing real-life donor stories, health blogs, upcoming camps, webinars, and awareness events – creating a sense of belonging and impact.
 
----
+- **Military-Grade Data Security** - Security is non-negotiable. Donix uses blockchain technology and military-grade encryption to ensure that all health data is securely stored and shared only with user consent.
 
-## 3️⃣ Tech Stack
+- **Verified Hospital Explorer** - Users can explore hospitals based on real-time reviews, treatment availability, and success rates — and even book appointments through the platform for hassle-free coordination.
 
-### *Frontend*
-- *Framework*: React.js / Next.js
-- *UI Library*: Tailwind CSS / Material-UI
-- *State Management*: Redux / Zustand
-- *Authentication*: Firebase Auth / JWT / Google OAuth
-- *API Calls*: Axios / React Query
-- *Maps Integration*: Google Maps API
+- **Organ Availability Tracking** - Donix introduces a live dashboard that tracks organ availability across partnered hospitals, bringing transparency and speed to a process that traditionally relied on manual communication.
 
-### *Backend*
-- *Framework*: Node.js + Express.js
-- *Database*: MongoDB (local or MongoDB Atlas)
-- *Authentication*: JWT / Google OAuth
-- *AI Integration*: GPT-4 or LangChain for intelligent responses
-- *Blockchain*: For secure and transparent record-keeping
+- **Instant Donor Registration** - Donix enables a fast and guided digital sign-up process for both donors and recipients. Users can register in just a few steps, with real-time access to verified hospital listings based on location and specialization.
 
----
+- **Digital Health Vault** - All health records, reports, and interactions stored securely and made accessible for both patients and doctors as needed.
 
-## 4️⃣ Installation and Setup
+## Tech-Stack in Building Donix
+- **Frontend** - Next.js,Tailwind CSS
+- **Backend** - TypeScript,Express.js
+- **Database** - MongoDB
+- **Gen AI** - Langchain
+- **LLM Models Used** - Ollama,Gemini,Mistral-70B
+- **Containerization & Deployment** - Docker
 
-### *Prerequisites*
-- Node.js (v14+)
-- MongoDB (local or MongoDB Atlas)
-- Firebase for authentication (Google OAuth)
-- Google Maps API Key
-
-### *Steps to Start the Project*
-
-#### *Clone the Repository*
-bash
-git clone https://github.com/amannitp131/Donix-org_aman.git
-
-
-
-#### *Frontend Setup*
-bash
-npm install
-npm run dev
-
-
-
-#### *Backend Setup*
-bash
-cd Backend
-node server.js
-
+## Summary 
+Donix is not just a platform — it is a mission-driven initiative to make organ donation simpler, smarter, and safer. By integrating cutting-edge AI, a secure digital backbone, and human-centric design, Donix aims to transform India's organ donation landscape and save countless lives through better coordination and care.
