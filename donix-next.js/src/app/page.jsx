@@ -8,6 +8,7 @@ import WhyChooseDonix from '@/components/landing/WhyChoseDonix'
 import HowItWorks from '@/components/landing/HowItWorks'
 import Numbers from '@/components/landing/Numbers'
 import FAQ from '@/components/landing/Faq'
+import ChatBot from '@/components/common/ChatBot'
 function Page() {
   const {resolvedTheme}=useTheme()
   const darkMode = resolvedTheme === "dark"
@@ -23,6 +24,7 @@ function Page() {
       <Numbers darkMode={darkMode} />
       <FAQ isDarkMode={darkMode} />
       <Footer darkMode={darkMode} />
+      <ChatBot />
     </div>
   )
 }
