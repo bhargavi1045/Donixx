@@ -8,3 +8,5 @@ langchain
 langchain-groq
 langchain-community
 uuid
+sentence-transformers
+faiss-cpu 
