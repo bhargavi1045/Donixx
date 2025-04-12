@@ -7,6 +7,7 @@ export interface User extends Document {
   role: "SuperAdmin" | "Donor" | "Recipient" | "Hospital" | "NGO" | "GovtOfficial";
   phone: string;
   address?: string;
+  blockchainAddress: string;
   createdAt: Date;
   isVerified:boolean;
 }
@@ -18,6 +19,7 @@ const UserSchema = new Schema<User>({
   role: { type: String, enum: ["SuperAdmin", "Donor", "Recipient", "Hospital", "NGO", "GovtOfficial"], required: true },
   phone: { type: String, required: true },
   address: { type: String },
+  blockchainAddress: { type: String, required: true, unique: true },
   isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
