@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template
 from flask import request, jsonify
 from app.utils.imageReader import get_extracted_text,answer_from_image_text
-
+from app.utils.chatBot import chat_interface
+import uuid
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -34,3 +35,28 @@ def image_reader_post():
     
     except Exception as e:
         return jsonify({'message': f'Error processing the image: {str(e)}'}), 500
+    
+@main.route("/donix-chat")
+def donix_chat():
+    return render_template("chatBot.html")
+
+@main.route("/ask-question", methods=["POST"])
+def ask_question():
+    question = request.json.get("question")
+    language = request.json.get("language", "English")
+    
+    if not question:
+        return jsonify({"error": "Question is required"}), 400
+    
+    response = chat_interface(question, language=language, session_id=str(uuid.uuid4()))
+    if not response:
+        return jsonify({"error": "No response from chat interface"}), 500
+
+    res = {
+        "question": question,
+        "language": language,
+        "answer": f"{response}",
+    }
+    
+    return jsonify(res), 200
+

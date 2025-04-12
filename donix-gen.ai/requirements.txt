@@ -7,4 +7,4 @@ python-dotenv==0.20.0
 langchain
 langchain-groq
 langchain-community
-
+uuid
