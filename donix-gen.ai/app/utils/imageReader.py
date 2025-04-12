@@ -10,7 +10,7 @@ genai.configure(api_key=os.getenv("GENAI_API_KEY"))
 
 vision_model = genai.GenerativeModel(os.getenv("Image_Reader_Model"))
 
-def get_extracted_text(blob_url):
+def get_extracted_text(image_blob):
     image = Image.open(io.BytesIO(image_blob))
     response = vision_model.generate_content(
         ["Extract all readable text from this image.", image]
