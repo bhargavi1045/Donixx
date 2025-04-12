@@ -7,6 +7,7 @@ import http from "http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import connectDatabase from "./config/db";
+import { registerRoute } from "./routes/register.route";
 dotenv.config({ path: ".env" });
 
 const app = express();
@@ -38,6 +39,8 @@ export const io = new Server(server, {
     credentials: true,
   },
 });
+
+app.use("/api/register", registerRoute.registerRoute());
 
 
 app.get("/", (req, res) => {
