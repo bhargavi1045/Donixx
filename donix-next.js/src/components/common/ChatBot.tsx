@@ -23,7 +23,7 @@ const ChatBot: React.FC = () => {
     setMessages((prevMessages) => [...prevMessages, `You: ${userMessage}`]);
     setInput("");
     setIsTyping(true);
-    setBotTypingMessage("Chatbot is typing...");
+    setBotTypingMessage("Nix is typing...");
 
     try {
       const response = await axios.post("https://donix-org-aman.onrender.com/predicts", {
@@ -76,7 +76,7 @@ const ChatBot: React.FC = () => {
     <div className="fixed bottom-4 right-4 flex flex-col items-center z-50">
       <Image
         src="/chatbot.gif"
-        alt="Chat with us"
+        alt="Chat with Nix"
         width={120}
         height={120}
         className="mb-2"
@@ -85,7 +85,7 @@ const ChatBot: React.FC = () => {
         onClick={toggleChat}
         className="bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-800 transition duration-300"
       >
-        {isChatOpen ? "Close" : "Chat with us"}
+        {isChatOpen ? "Close" : "Chat with Nix"}
       </button>
     </div>
   
@@ -94,7 +94,7 @@ const ChatBot: React.FC = () => {
       <div className="fixed bottom-16 right-4 bg-gray-800 w-80 h-96 rounded-lg shadow-xl p-4 flex flex-col z-50">
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-2 border-gray-700">
-          <h2 className="text-xl font-semibold text-white">Chatbot</h2>
+          <h2 className="text-xl font-semibold text-white">Ask Doubt</h2>
           <button
             onClick={toggleChat}
             className="text-2xl text-gray-400 hover:text-gray-200 transition duration-200"
