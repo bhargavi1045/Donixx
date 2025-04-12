@@ -7,6 +7,7 @@ import Hero from '@/components/landing/Hero'
 import WhyChooseDonix from '@/components/landing/WhyChoseDonix'
 import HowItWorks from '@/components/landing/HowItWorks'
 import Numbers from '@/components/landing/Numbers'
+import FAQ from '@/components/landing/Faq'
 function Page() {
   const {resolvedTheme}=useTheme()
   const darkMode = resolvedTheme === "dark"
@@ -20,6 +21,7 @@ function Page() {
       <WhyChooseDonix />
       <HowItWorks darkMode={darkMode} />
       <Numbers darkMode={darkMode} />
+      <FAQ isDarkMode={darkMode} />
       <Footer darkMode={darkMode} />
     </div>
   )
