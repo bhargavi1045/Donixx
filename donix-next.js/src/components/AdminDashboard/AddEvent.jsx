@@ -4,20 +4,24 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 
 const AddEvent = () => {
-  const [webinars, setWebinars] = useState([]); 
+  const [webinars, setWebinars] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(true);
 
   useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    setDarkMode(storedDarkMode === "1");
-
     // Fetch unverified webinars
     const fetchWebinars = async () => {
       try {
         const token = Cookies.get("token");
         if (!token) {
           toast.error("Authorization token is missing.");
+          // Show dummy data if no token is found
+          setWebinars([
+            { _id: "1", title: "AI in Healthcare", date: "2025-04-15", addedBy: "Dr. Aashish Kumar" },
+            { _id: "2", title: "Organ Donation Awareness", date: "2025-04-20", addedBy: "Dr. Akash Verma" },
+            { _id: "3", title: "Future of Telemedicine", date: "2025-04-25", addedBy: "Dr. Bhargavi Sharma" },
+          ]);
+          setLoading(false);
           return;
         }
 
@@ -30,7 +34,13 @@ const AddEvent = () => {
         setWebinars(response.data.hospitals || []);
         setLoading(false);
       } catch (error) {
-        toast.error("Failed to fetch webinars. Try again later.");
+        toast.error("Failed to fetch webinars. Showing dummy data.");
+        // Show dummy data if the API call fails
+        setWebinars([
+          { _id: "1", title: "AI in Healthcare", date: "2025-04-15", addedBy: "Dr. Aashish Kumar" },
+          { _id: "2", title: "Organ Donation Awareness", date: "2025-04-20", addedBy: "Dr. Akash Verma" },
+          { _id: "3", title: "Future of Telemedicine", date: "2025-04-25", addedBy: "Dr. Bhargavi Sharma" },
+        ]);
         setLoading(false);
       }
     };
@@ -58,7 +68,7 @@ const AddEvent = () => {
 
       toast.success(response.data.message);
 
-      // Update the webinars list after approval
+  
       setWebinars((prevWebinars) =>
         prevWebinars.filter((webinar) => webinar._id !== webinarId)
       );

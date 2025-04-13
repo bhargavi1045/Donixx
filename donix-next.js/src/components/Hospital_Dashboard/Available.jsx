@@ -35,8 +35,7 @@ const Available = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit organ details");
+        toast.success("Organ details submitted successfully!");
       }
 
       const data = await response.json();

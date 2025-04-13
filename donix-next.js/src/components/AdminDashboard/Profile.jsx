@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   FaFacebook,
@@ -9,92 +9,16 @@ import {
   FaLinkedin,
   FaGoogle,
 } from "react-icons/fa";
-import Cookies from "js-cookie";
-
 
 export default function Profile() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [darkMode] = useState(true);
 
-  useEffect(() => {
-
-    const storedDarkMode = Cookies.get("darkMode");
-    setDarkMode(storedDarkMode === "1");
-
-
-    const fetchUserDetails = async () => {
-      try {
-        
-        const token = Cookies.get("token");
-
-        if (!token) {
-          setError("Authorization token is missing. Please log in.");
-          setLoading(false);
-          return;
-        }
-
-        // Make the API request to fetch user details
-        const response = await fetch("https://donix-org-aman.onrender.com/getDetails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to fetch user details");
-        }
-
-        const data = await response.json();
-        setUserDetails(data.user); 
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
-
-  if (loading) {
-    return <p>Loading user details...</p>;
-  }
-
-  if (error) {
-    return <p className="text-red-500">Error: {error}</p>;
-  }
-
-  // const blogs = [
-  //   {
-  //     id: 1,
-  //     title: "My Journey as an Organ Donor",
-  //     description:
-  //       "Sharing my experience of becoming an organ donor and how it changed my perspective on life.",
-  //     date: "March 25, 2025",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Receiving a Life-Saving Organ",
-  //     description:
-  //       "A heartfelt story of how an organ transplant gave me a second chance at life.",
-  //     date: "March 20, 2025",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "The Importance of Organ Donation",
-  //     description:
-  //       "Why everyone should consider registering as an organ donor and the impact it can have.",
-  //     date: "March 15, 2025",
-  //   },
-  // ];
- 
+  // Dummy user details
+  const userDetails = {
+    fullName: "Dr. Aashish Kumar",
+    email: "aashish.kumar@example.com",
+    phoneNo: "+91-9876543210",
+  };
 
   return (
     <div
@@ -111,17 +35,13 @@ export default function Profile() {
         }`}
       >
         <div className="flex flex-col items-center">
-          <Image
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyzK2fuK3gDNJMRMKGHwHXfyqd6X1pL4lAxg&s"
-            alt="Profile"
-            width={96}
-            height={96}
-            className="rounded-full mb-3"
-          />
+         
           <span className="bg-gray-500 text-white px-4 py-1 rounded text-sm">
             Admin
           </span>
-          <h5 className="text-lg font-semibold mt-2"> {userDetails?.fullName || "User"}</h5>
+          <h5 className="text-lg font-semibold mt-2">
+            {userDetails.fullName || "User"}
+          </h5>
           <span className="text-gray-500 dark:text-gray-400">
             Organ Donor/Recipient
           </span>
@@ -151,21 +71,19 @@ export default function Profile() {
             </li>
           </ul>
           <div className="mt-4 flex space-x-3">
-          <a href={`mailto:${userDetails?.email}`}>
-  <button className="border border-purple-700 text-purple-700 dark:text-purple-400 px-4 py-2 rounded-md hover:bg-purple-700 hover:text-white dark:hover:bg-purple-400 dark:hover:text-gray-900 transition">
-    Message
-  </button>
-</a>
-            <a href={`tel:${userDetails?.phoneNo}`}>
-  <button className="bg-purple-700 text-white dark:bg-purple-400 dark:text-gray-900 px-4 py-2 rounded-md hover:bg-purple-800 dark:hover:bg-purple-500 transition">
-    Contact
-  </button>
-</a>
+            <a href={`mailto:${userDetails.email}`}>
+              <button className="border border-purple-700 text-purple-700 dark:text-purple-400 px-4 py-2 rounded-md hover:bg-purple-700 hover:text-white dark:hover:bg-purple-400 dark:hover:text-gray-900 transition">
+                Message
+              </button>
+            </a>
+            <a href={`tel:${userDetails.phoneNo}`}>
+              <button className="bg-purple-700 text-white dark:bg-purple-400 dark:text-gray-900 px-4 py-2 rounded-md hover:bg-purple-800 dark:hover:bg-purple-500 transition">
+                Contact
+              </button>
+            </a>
           </div>
         </div>
       </div>
-
-     
     </div>
   );
 }
