@@ -16,7 +16,106 @@ export const Task = () => {
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
-  
+  const handleChange = (
+    e
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setResponse(null);
+
+    try {
+      const res = await fetch("https://donix-org-aman.onrender.com/process_feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to process feedback");
+      }
+
+      const data = await res.json();
+      setResponse(data.response);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const storedDarkMode = localStorage.getItem("darkMode");
+    setDarkMode(storedDarkMode === "1");
+
+    if (response) {
+      drawChart(response[0]);
+    }
+  }, [response]);
+
+  // const toggleDarkMode = () => {
+  //   setDarkMode(!darkMode);
+  //   localStorage.setItem("darkMode", darkMode ? "0" : "1");
+  // };
+
+  const drawChart = (score) => {
+    d3.select("#chart").selectAll("svg").remove();
+    const width = 200,
+      height = 200,
+      radius = Math.min(width, height) / 2;
+
+    const svg = d3
+      .select("#chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", `translate(${width / 2},${height / 2})`);
+
+    const arc = d3.arc().innerRadius(60).outerRadius(radius);
+    const pie = d3
+      .pie()
+      .sort(null)
+      .value((d) => d.value);
+    const data = [{ value: score }, { value: 100 - score }];
+
+    svg
+      .selectAll(".arc")
+      .data(pie(data))
+      .enter()
+      .append("path")
+      .attr("d", arc)
+      .attr("fill", (d, i) => (i === 0 ? "#4CAF50" : "#ddd"));
+
+    svg
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", "0.35em")
+      .style("font-size", "16px")
+      .style("font-weight", "bold")
+      .text(`${score}%`);
+  };
+
+  const formatResponse = (text) => {
+    return text.split("\n").map((line, index) => {
+      const formattedLine = line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      return (
+        <p
+          key={index}
+          className="mb-2"
+          dangerouslySetInnerHTML={{ __html: formattedLine }}
+        ></p>
+      );
+    });
+  };
 
   return (
     <div

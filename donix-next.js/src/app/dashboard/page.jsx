@@ -18,9 +18,8 @@ import Find from "../../components/User_dashboard/Find";
 import Activity from "../../components/User_dashboard/Activity";
 import ChatApp from "../../components/User_dashboard/Chat";
 import Account from "../../components/User_dashboard/Account";
-import { Task } from "@/components/User_dashboard/Task";
-import ProtectedRoute from "@/utility/ProtectedRoute";
-import { LogoutModal } from "@/components/LogOutModal";
+import { Task } from "../../components/User_dashboard/Task";
+import { LogoutModal } from "../../components/User_dashboard/LogOutModal";
 import Image from "next/image";
 
 const Dashboard = () => {
@@ -31,18 +30,48 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Image
-          src="/Laoder_animation.gif"
-          alt="Loading..."
-          width={200}
-          height={200}
-          className="mx-auto"
-        />
-      </div>
-    );
+  useEffect(() => {
+    // Retrieve dark mode preference
+    setDarkMode(localStorage.getItem("darkMode") === "1");
+
+    const fetchUserDetails = async () => {
+      try {
+        setLoading(true);
+        const token = Cookies.get("token");
+        if (!token) throw new Error("No token found");
+
+        const response = await axios.post(
+          "https://donix-org-aman.onrender.com/getDetails",
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setUserDetails(response.data.user);
+        toast.success("User details fetched successfully!");
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        toast.error("Failed to fetch user details. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+   if (loading)
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <Image
+            src="/Laoder_animation.gif" 
+            alt="Loading..."
+            width={200} // Adjust the width as needed
+            height={200} // Adjust the height as needed
+            className="mx-auto"
+          />
+        </div>
+      );
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -64,7 +93,7 @@ const Dashboard = () => {
       case "Chat":
         return <ChatApp />;
       case "Task":
-        return <Task />;
+        return <Task/>;
       case "Logout":
         return null;
       default:
@@ -73,7 +102,7 @@ const Dashboard = () => {
   };
 
   return (
-    <ProtectedRoute>
+ 
       <div
         className={`flex h-screen ${
           darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
@@ -148,32 +177,29 @@ const Dashboard = () => {
           <hr className="my-4" />
 
           {/* Additional Options */}
-          <ul className="space-y-4">
-            {[
-              { icon: MdOutlineWorkHistory, text: "Task", key: "Task" },
-              {
-                icon: IoMdLogOut,
-                text: "Logout",
-                key: "Logout",
-                action: () => setLogoutModalVisible(true),
-              },
-            ].map(({ icon: Icon, text, key, action }) => (
-              <li
-                key={key}
-                onClick={
-                  action ||
-                  (() => {
-                    setActiveContent(key);
-                    setIsSidebarOpen(false);
-                  })
-                }
-                className="flex items-center gap-3 cursor-pointer hover:text-red-500"
-              >
-                <Icon className="text-2xl" />
-                <span>{text}</span>
-              </li>
-            ))}
-          </ul>
+<ul className="space-y-4">
+  {[
+    { icon: MdOutlineWorkHistory, text: "Task", key: "Task" },
+    {
+      icon: IoMdLogOut,
+      text: "Logout",
+      key: "Logout",
+      action: () => setLogoutModalVisible(true),
+    },
+  ].map(({ icon: Icon, text, key, action }) => (
+    <li
+      key={key}
+      onClick={action || (() => {
+        setActiveContent(key); 
+        setIsSidebarOpen(false); 
+      })}
+      className="flex items-center gap-3 cursor-pointer hover:text-red-500"
+    >
+      <Icon className="text-2xl" />
+      <span>{text}</span>
+    </li>
+  ))}
+</ul>
         </div>
 
         {/* Mobile Menu Button */}
@@ -204,7 +230,7 @@ const Dashboard = () => {
           onConfirm={handleLogout}
         />
       </div>
-    </ProtectedRoute>
+   
   );
 };
 
