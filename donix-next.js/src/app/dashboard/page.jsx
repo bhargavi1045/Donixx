@@ -12,7 +12,8 @@ import { IoIosChatbubbles } from "react-icons/io";
 import { MdOutlineWorkHistory } from "react-icons/md";
 import { IoMdLogOut, IoMdClose } from "react-icons/io";
 import { FiMenu } from "react-icons/fi";
-import Profile from "../../components/User_dashboard/Profile";
+// import Profile from "../../components/User_dashboard/Profile";
+import Profile from "./user/page";
 import Add from "../../components/User_dashboard/Add";
 import Find from "../../components/User_dashboard/Find";
 import Activity from "../../components/User_dashboard/Activity";
@@ -22,6 +23,7 @@ import { Task } from "../../components/User_dashboard/Task";
 import { LogoutModal } from "../../components/User_dashboard/LogOutModal";
 import Image from "next/image";
 import RealTimeChatApp from "../../components/User_dashboard/RealTimeChat";
+import jwt from "jsonwebtoken"
 const Dashboard = () => {
   const [activeContent, setActiveContent] = useState("Profile");
   const [userDetails, setUserDetails] = useState(null);
@@ -29,49 +31,36 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
+  const [userData, setUserData] = useState({ name: "", role: "" });
 
   useEffect(() => {
-    // Retrieve dark mode preference
-    setDarkMode(localStorage.getItem("darkMode") === "1");
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
 
-    const fetchUserDetails = async () => {
+    if (token) {
       try {
-        setLoading(true);
-        const token = Cookies.get("token");
-        if (!token) throw new Error("No token found");
-
-        const response = await axios.post(
-          "https://donix-org-aman.onrender.com/getDetails",
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setUserDetails(response.data.user);
-        toast.success("User details fetched successfully!");
+        const decoded = jwt.decode(token);
+        setUserData({ name: decoded.name, role: decoded.role });
       } catch (error) {
-        console.error("Error fetching user details:", error);
-        toast.error("Failed to fetch user details. Please try again.");
-      } finally {
-        setLoading(false);
+        console.error("Error decoding token:", error);
       }
-    };
-
-    fetchUserDetails();
+    }
   }, []);
 
-   if (loading)
-      return (
-        <div className="flex justify-center items-center min-h-screen">
-          <Image
-            src="/Laoder_animation.gif" 
-            alt="Loading..."
-            width={200} 
-            height={200}
-            className="mx-auto"
-          />
-        </div>
-      );
+  //  if (loading)
+  //     return (
+  //       <div className="flex justify-center items-center min-h-screen">
+  //         <Image
+  //           src="/Laoder_animation.gif" 
+  //           alt="Loading..."
+  //           width={200} 
+  //           height={200}
+  //           className="mx-auto"
+  //         />
+  //       </div>
+  //     );
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -127,8 +116,8 @@ return (
         >
           <FaUserCircle className="text-3xl" />
           <div>
-            <span className="text-lg block">{userDetails?.fullName || "User"}</span>
-            <span className="text-sm">{JSON.parse(localStorage.getItem("role") || '"Role"')}</span>
+          <span className="text-lg block">{userData.name || "User"}</span>
+          <span className="text-sm text-gray-500">{userData.role || "Role"}</span>
           </div>
         </div>
         <hr className="my-4" />
