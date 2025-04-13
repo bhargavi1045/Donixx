@@ -12,7 +12,7 @@ dotenv.config({ path: ".env" });
 
 const app = express();
 const server = http.createServer(app);
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 10000;
 connectDatabase()
 const allowedOrigins = [
   "http://localhost:3000",
