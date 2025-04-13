@@ -2,6 +2,8 @@ from flask import Blueprint, render_template
 from flask import request, jsonify
 from app.utils.imageReader import get_extracted_text,answer_from_image_text
 from app.utils.chatBot import chat_interface
+from app.utils.recoveryRoutine import predict_recovery_score, generate_recovery_plan, get_feedback_history, load_user_history, retrieve_similar_cases
+from app.utils.recoveryRoutine import store_user_history
 import uuid
 main = Blueprint('main', __name__)
 
@@ -60,3 +62,28 @@ def ask_question():
     
     return jsonify(res), 200
 
+@main.route("/recovery-routine", methods=["GET", "POST"])
+def recovery_routine():
+    if request.method == "POST":
+        heart_rate = request.form.get("heart_rate")
+        bp = request.form.get("bp")
+        oxygen_saturation = request.form.get("oxygen_saturation")
+        symptoms = request.form.get("symptoms")
+        feedback = request.form.get("feedback")
+
+        data = {
+            "heart_rate": heart_rate,
+            "bp": bp,
+            "oxygen_saturation": oxygen_saturation,
+            "symptoms": symptoms,
+        }
+        score = predict_recovery_score(data)
+        store_user_history(data, score, feedback)
+        feedback_history = get_feedback_history()
+        user_history = load_user_history()
+        similar_cases = retrieve_similar_cases(data)
+        plan = generate_recovery_plan(score, feedback_history, user_history, similar_cases)
+
+        return render_template("recoveryRoutine.html", score=score, plan=plan, submitted=True)
+
+    return render_template("recoveryRoutine.html", submitted=False)
