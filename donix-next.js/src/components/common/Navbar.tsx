@@ -169,7 +169,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            href={"/auth/Login"}
+            href={"/Login"}
             className="flex items-center gap-2 px-4 py-2 ml-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg transition-all"
           >
             <LogIn className="w-4 h-4" />
