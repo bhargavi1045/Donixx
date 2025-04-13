@@ -5,9 +5,6 @@ import jwt from "jsonwebtoken";
 export function middleware(req) {
     const token = req.cookies.get("token")?.value;
 
-    if (!token) {
-        return NextResponse.redirect(new URL("/Login", req.url));
-    }
 
     try {
         const decodedToken = jwt.decode(token);

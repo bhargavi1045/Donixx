@@ -44,7 +44,7 @@ const Dashboard = () => {
   return (
     <div
       className={`flex h-screen ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-900 text-gray-900"
       }`}
     >
       {/* Sidebar */}
@@ -52,7 +52,7 @@ const Dashboard = () => {
         className={`fixed top-0 z-2 left-0 w-64 h-screen p-6 shadow-lg transition-transform duration-300 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } ${
-          darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"
+          darkMode ? "bg-gray-800 text-gray-200" : "bg-gray-800 text-gray-200"
         } md:translate-x-0`}
       >
         {/* Close Button for Mobile */}
