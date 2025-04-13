@@ -40,30 +40,30 @@ const VerifyEmail: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        {loading ? (
-          <div className="text-center">
-            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-solid border-gray-300 border-t-transparent rounded-full"></div>
-            <p className="mt-4 text-gray-500">Verifying your account...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center text-red-500">
-            <p>{error}</p>
-          </div>
-        ) : success ? (
-          <div className="text-center text-green-500">
-            <p>{message}</p>
-            <button
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-              onClick={handleRedirect}
-            >
-              Go to Login
-            </button>
-          </div>
-        ) : null}
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+  <div className="bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full">
+    {loading ? (
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-600 border-t-transparent mx-auto"></div>
+        <p className="mt-4 text-gray-400">Verifying your account...</p>
       </div>
-    </div>
+    ) : error ? (
+      <div className="text-center">
+        <p className="text-red-400 font-semibold">{error}</p>
+      </div>
+    ) : success ? (
+      <div className="text-center">
+        <p className="text-green-400 font-semibold">{message}</p>
+        <button
+          className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-500 transition-all"
+          onClick={handleRedirect}
+        >
+          Go to Login
+        </button>
+      </div>
+    ) : null}
+  </div>
+</div>
   );
 };
 
