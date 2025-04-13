@@ -21,7 +21,7 @@ import Account from "../../components/User_dashboard/Account";
 import { Task } from "../../components/User_dashboard/Task";
 import { LogoutModal } from "../../components/User_dashboard/LogOutModal";
 import Image from "next/image";
-
+import RealTimeChatApp from "../../components/User_dashboard/RealTimeChat";
 const Dashboard = () => {
   const [activeContent, setActiveContent] = useState("Profile");
   const [userDetails, setUserDetails] = useState(null);
@@ -91,7 +91,7 @@ const Dashboard = () => {
       case "Account":
         return <Account />;
       case "Chat":
-        return <ChatApp />;
+        return <RealTimeChatApp />;
       case "Task":
         return <Task/>;
       case "Logout":
@@ -160,7 +160,7 @@ return (
         {/* Additional Options */}
         <ul className="space-y-4">
           {[
-            { icon: MdOutlineWorkHistory, text: "Task", key: "Task" },
+            { icon: MdOutlineWorkHistory, text: "Health Assistant", key: "Task" },
             {
               icon: IoMdLogOut,
               text: "Logout",
