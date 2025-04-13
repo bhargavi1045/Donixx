@@ -10,6 +10,9 @@ import connectDatabase from "./config/db";
 import { registerRoute } from "./routes/register.route";
 import { Chat } from "./models/chatModel";
 import { userRoute } from "./routes/user.route";
+import { hospitalNGORoute } from "./routes/hospital-ngo.routes";
+import { HospitalRoute } from "./routes/hospital.route";
+
 dotenv.config({ path: ".env" });
 
 const app = express();
@@ -89,7 +92,8 @@ io.on("connection", (socket) => {
 
 app.use("/api/register", registerRoute.registerRoute());
 app.use("/api/users",userRoute.userRoute());
-
+app.use("/api/hospital-ngo", hospitalNGORoute.hospitalNGORoute());
+app.use('/api/hospital',HospitalRoute.hospitalRoute());
 app.get("/", (req, res) => {
   res.send("Type-Script Express");
 });
