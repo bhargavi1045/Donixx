@@ -6,25 +6,49 @@ import Cookies from "js-cookie";
 const VerifyHospital = () => {
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    setDarkMode(storedDarkMode === "1");
-  }, []);
+  const [darkMode] = useState(true);
 
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
         const token = Cookies.get("token");
+
+        if (!token) {
+          toast.error("Authorization token is missing.");
+          // Set dummy data if no token is found
+          setHospitals([
+            { _id: "1", hospitalName: "Apollo Hospital", city: "Delhi", state: "Delhi" },
+            { _id: "2", hospitalName: "Fortis Hospital", city: "Mumbai", state: "Maharashtra" },
+            { _id: "3", hospitalName: "AIIMS", city: "Bangalore", state: "Karnataka" },
+          ]);
+          setLoading(false);
+          return;
+        }
+
         const response = await axios.get("https://donix-org-aman.onrender.com/admin/hospitals", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setHospitals(response.data.hospitals);
+
+        if (response.data.hospitals.length === 0) {
+          // Set dummy data if API returns no hospitals
+          setHospitals([
+            { _id: "1", hospitalName: "Apollo Hospital", city: "Delhi", state: "Delhi" },
+            { _id: "2", hospitalName: "Fortis Hospital", city: "Mumbai", state: "Maharashtra" },
+            { _id: "3", hospitalName: "AIIMS", city: "Bangalore", state: "Karnataka" },
+          ]);
+        } else {
+          setHospitals(response.data.hospitals);
+        }
       } catch (error) {
-        toast.error(error.response?.data?.error || "Failed to fetch hospitals");
+        toast.error("Failed to fetch hospitals. Showing dummy data.");
+        // Set dummy data if the API call fails
+        setHospitals([
+          { _id: "1", hospitalName: "Apollo Hospital", city: "Delhi", state: "Delhi" },
+          { _id: "2", hospitalName: "Fortis Hospital", city: "Mumbai", state: "Maharashtra" },
+          { _id: "3", hospitalName: "AIIMS", city: "Bangalore", state: "Karnataka" },
+        ]);
       } finally {
         setLoading(false);
       }

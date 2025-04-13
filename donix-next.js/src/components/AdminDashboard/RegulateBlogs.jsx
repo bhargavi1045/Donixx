@@ -6,25 +6,49 @@ import Cookies from "js-cookie";
 const RegulateBlogs = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    setDarkMode(storedDarkMode === "1");
-  }, []);
+  const [darkMode] = useState(true);
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         const token = Cookies.get("token");
+
+        if (!token) {
+          toast.error("Authorization token is missing.");
+          // Set dummy data if no token is found
+          setArticles([
+            { _id: "1", title: "The Importance of Organ Donation", addedBy: "Dr. Aashish Kumar" },
+            { _id: "2", title: "How Organ Transplants Save Lives", addedBy: "Dr. Akash Verma" },
+            { _id: "3", title: "Raising Awareness About Organ Donation", addedBy: "Dr. Bhargavi Sharma" },
+          ]);
+          setLoading(false);
+          return;
+        }
+
         const response = await axios.get("https://donix-org-aman.onrender.com/getArticles", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setArticles(response.data.articles);
+
+        if (response.data.articles.length === 0) {
+          // Set dummy data if API returns no articles
+          setArticles([
+            { _id: "1", title: "The Importance of Organ Donation", addedBy: "Dr. Aashish Kumar" },
+            { _id: "2", title: "How Organ Transplants Save Lives", addedBy: "Dr. Akash Verma" },
+            { _id: "3", title: "Raising Awareness About Organ Donation", addedBy: "Dr. Bhargavi Sharma" },
+          ]);
+        } else {
+          setArticles(response.data.articles);
+        }
       } catch (error) {
-        toast.error(error.response?.data?.message || "Failed to fetch articles");
+        toast.error("Failed to fetch articles. Showing dummy data.");
+        // Set dummy data if the API call fails
+        setArticles([
+          { _id: "1", title: "The Importance of Organ Donation", addedBy: "Dr. Aashish Kumar" },
+          { _id: "2", title: "How Organ Transplants Save Lives", addedBy: "Dr. Akash Verma" },
+          { _id: "3", title: "Raising Awareness About Organ Donation", addedBy: "Dr. Bhargavi Sharma" },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -57,6 +81,7 @@ const RegulateBlogs = () => {
   if (loading) {
     return <div className={darkMode ? "text-white" : "text-gray-900"}>Loading...</div>;
   }
+
 
   return (
     <div
