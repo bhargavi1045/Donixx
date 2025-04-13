@@ -11,13 +11,6 @@ import {
 } from "react-icons/fa";
 import Cookies from "js-cookie";
 
-interface UserDetails {
-  fullName: string;
-  email: string;
-  phoneNo: string;
-  [key: string]: unknown; 
-}
-
 
 export default function Profile() {
   const [darkMode, setDarkMode] = useState(false);
@@ -58,7 +51,7 @@ export default function Profile() {
 
         const data = await response.json();
         setUserDetails(data.user); 
-      } catch (error: unknown) {
+      } catch (error) {
         if (error instanceof Error) {
           console.error(error.message);
         }
