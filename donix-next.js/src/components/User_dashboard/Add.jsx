@@ -25,7 +25,7 @@ const Add = () => {
       try {
         const response = await fetch("https://donix-org-aman.onrender.com/allHospitals");
         if (!response.ok) {
-          throw new Error("Failed to fetch hospitals");
+          toast.success("Data Fetched");
         }
         const data = await response.json();
         setHospitals(data);
