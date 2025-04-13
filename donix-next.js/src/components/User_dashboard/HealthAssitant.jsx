@@ -23,8 +23,8 @@ import {
   ScanEye,
   Pulse
 } from "lucide-react";
-import { ClipboardCheck } from "lucide-react";
-export const Task = () => {
+
+export const TaskAssistant = () => {
   const [healthForm, setHealthForm] = useState({
     heart_rate: "",
     bp: "",
@@ -57,7 +57,7 @@ export const Task = () => {
     setHealthResponse(null);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_GEN_AI_ENDPOINT}/recovery-routine-api`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_GEN_AI_ENDPOINT}/image-reader`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export const Task = () => {
     formData.append("question", question);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_GEN_AI_ENDPOINT}/image-reader`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_GEN_AI_ENDPOINT}/recovery-routine-api`, {
         method: "POST",
         body: formData,
       });

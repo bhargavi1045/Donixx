@@ -160,7 +160,7 @@ return (
         {/* Additional Options */}
         <ul className="space-y-4">
           {[
-            { icon: MdOutlineWorkHistory, text: "Task", key: "Task" },
+            { icon: MdOutlineWorkHistory, text: "Health Assistant", key: "Task" },
             {
               icon: IoMdLogOut,
               text: "Logout",

@@ -11,7 +11,7 @@ main = Blueprint('main', __name__)
 def index():
     return "Flask Application is running!"
 
-@main.route("/image-reader")
+@main.route("/image-reader-template")
 def image_reader():
     return render_template("imageReader.html")
 
@@ -21,14 +21,14 @@ def image_reader_post():
         return jsonify({'message': 'No image uploaded'}), 400
 
     image_blob = request.files["image"].read()
-    
+    question = request.form.get("question")
     try:
         extracted_text = get_extracted_text(image_blob)
         
         if not extracted_text:
             return jsonify({'message': 'No text found in the image'}), 400
         
-        answer_from_image_text_response = answer_from_image_text("What is the image about?", extracted_text)
+        answer_from_image_text_response = answer_from_image_text(question, extracted_text)
         
         return jsonify({
             'extracted_text': extracted_text,
@@ -87,3 +87,46 @@ def recovery_routine():
         return render_template("recoveryRoutine.html", score=score, plan=plan, submitted=True)
 
     return render_template("recoveryRoutine.html", submitted=False)
+
+@main.route("/recovery-routine-api", methods=["POST"])
+def recovery_routine_api():
+    data = request.get_json()
+    
+    try:
+        heart_rate = data.get("heart_rate")
+        bp = data.get("bp")
+        oxygen_saturation = data.get("oxygen_saturation")
+        symptoms = data.get("symptoms")
+        feedback = data.get("feedback", "")
+
+        if not all([heart_rate, bp, oxygen_saturation, symptoms]):
+            return jsonify({
+                'success': False,
+                'message': 'Missing required fields'
+            }), 400
+
+        health_data = {
+            "heart_rate": heart_rate,
+            "bp": bp,
+            "oxygen_saturation": oxygen_saturation,
+            "symptoms": symptoms,
+        }
+        
+        score = predict_recovery_score(data)
+        store_user_history(data, score, feedback)
+        feedback_history = get_feedback_history()
+        user_history = load_user_history()
+        similar_cases = retrieve_similar_cases(data)
+        plan = generate_recovery_plan(score, feedback_history, user_history, similar_cases)
+
+        return jsonify({
+            'success': True,
+            'score': score,
+            'plan': plan,
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error generating recovery plan: {str(e)}'
+        }), 500
