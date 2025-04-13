@@ -14,7 +14,7 @@ export const Task = () => {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(true); 
 
   const handleChange = (
     e
@@ -53,8 +53,6 @@ export const Task = () => {
   };
 
   useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    setDarkMode(storedDarkMode === "1");
 
     if (response) {
       drawChart(response[0]);

@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import jwt from "jsonwebtoken";
-import "../../global.css";
+import "../../app/globals.css";
 import { IoChevronBackCircleSharp, IoChevronBackCircleOutline } from "react-icons/io5";
 
-
+const socket = io("http://localhost:10000", { transports: ["websocket"] });
 
 function ChatApp() {
   const [totalUsersList, setTotalUsersList] = useState([]);
@@ -16,11 +16,123 @@ function ChatApp() {
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
   const [senderId, setSenderId] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(true); 
 
   const localMessageCache = {};
 
-  
+  // Decode token and set senderId
+  useEffect(() => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
+
+    if (token) {
+      try {
+        const decoded = jwt.decode(token);
+        setSenderId(decoded.id);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
+  // Fetch users and set up socket listeners
+  useEffect(() => {
+    axios
+      .get("https://donix-org-aman.onrender.com/api/users/get-all")
+      .then((response) => setTotalUsersList(response.data))
+      .catch((error) => console.error("Error fetching users:", error));
+
+    socket.on("connect", () => console.log("Connected to server:", socket.id));
+    socket.on("users", (userList) => setTotalUsersList(userList));
+    socket.on("receiveMessage", (data) => {
+      if (data.sender === selectedUser || data.receiver === selectedUser) {
+        setMessages((prev) => [...prev, data]);
+      }
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("users");
+      socket.off("receiveMessage");
+    };
+  }, [selectedUser]);
+
+  // Emit joined-chat event when senderId is set
+  useEffect(() => {
+    if (senderId) {
+      socket.emit("joined-chat", senderId);
+    }
+  }, [senderId]);
+
+  // Handle user click to fetch chat history
+  const handleUserClick = async (userId) => {
+    setSelectedUser(userId);
+
+    if (!senderId) {
+      console.error("Sender ID is missing.");
+      return;
+    }
+
+    if (localMessageCache[userId]) {
+      setMessages(localMessageCache[userId]);
+      return;
+    }
+
+    try {
+      const response = await axios.get("https://donix-org-aman.onrender.com/api/users/chat-history", {
+        params: { receiverId: userId, senderId },
+      });
+      setCurrentClickedUser(response.data);
+      const formattedMessages = response.data.map((msg) => ({
+        ...msg,
+        senderName: msg.sender === senderId ? "You" : totalUsersList.find((user) => user._id === msg.sender)?.fullName || "Unknown",
+      }));
+      setMessages(formattedMessages);
+      localMessageCache[userId] = formattedMessages;
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
+  };
+
+  // Send a message
+  const sendMessage = async () => {
+    if (!message.trim() || !selectedUser || !senderId) {
+      console.error("Message, selected user, or sender ID is missing.");
+      return;
+    }
+
+    const newMessage = {
+      message,
+      sender: senderId,
+      receiver: selectedUser, 
+    };
+
+    try {
+      // Send message to the server
+      const response = await axios.post("https://donix-org-aman.onrender.com/api/users/message-send", newMessage);
+
+      // Emit message to the socket
+      socket.emit("sendMessage", response.data.chatMessage);
+
+      // Update local state and cache
+    setMessages((prev) => {
+      // Check if the message already exists
+      const isDuplicate = prev.some(
+        (msg) => msg._id === response.data.chatMessage._id
+      );
+      if (!isDuplicate) {
+        return [...prev, response.data.chatMessage];
+      }
+      return prev;
+    });
+      localMessageCache[selectedUser] = [...(localMessageCache[selectedUser] || []), response.data.chatMessage];
+      setMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
   return (
     <div
       className={`flex ${

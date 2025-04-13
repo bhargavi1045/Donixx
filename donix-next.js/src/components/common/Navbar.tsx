@@ -268,7 +268,7 @@ const Navbar = () => {
             </Link>
             <button
               onClick={() => {
-                router.push("/auth/login");
+                router.push("/auth/Login");
                 setMobileMenuOpen(false);
               }}
               className="w-full flex items-center justify-center gap-2 mt-4 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white"

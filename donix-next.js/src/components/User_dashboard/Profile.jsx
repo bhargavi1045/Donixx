@@ -9,11 +9,61 @@ import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import Image from "next/image";
 
 const Profile = () => {
-  const [darkMode, setDarkMode] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true); 
+  const [darkMode] = useState(true); 
 
+  useEffect(() => {
   
+
+    const fetchUserDetails = async () => {
+      try {
+        setLoading(true);
+        const token = Cookies.get("token");
+        if (!token) throw new Error("No token found");
+
+        const response = await axios.post(
+          "https://donix-org-aman.onrender.com/getDetails",
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setUserDetails(response.data.user);
+        toast.success("User details fetched successfully!");
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        toast.error("Failed to fetch user details. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("darkMode", newMode ? "1" : "0"); // Save preference to localStorage
+      return newMode;
+    });
+  };
+
+  if (loading) {
+    return (
+          <div className="flex justify-center items-center min-h-screen">
+            <Image
+              src="/Laoder_animation.gif"
+              alt="Loading..."
+              width={200}
+              height={200}
+              className="mx-auto"
+            />
+          </div>
+        );
+  }
+
 
     return (
         <div className={`p-6 min-h-screen transition-all duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
