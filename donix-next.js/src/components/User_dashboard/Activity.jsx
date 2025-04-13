@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 export default function Activity() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(true); 
   const [activeTab, setActiveTab] = useState("updates");
   const [organData, setOrganData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,87 @@ export default function Activity() {
     donationLink: "",
   });
 
+  useEffect(() => {
+    const fetchOrganData = async () => {
+      try {
+        const token = Cookies.get("token");
+        if (!token) {
+          setError("Authorization token is missing.");
+          setLoading(false);
+          return;
+        }
   
+        const response = await axios.get("https://donix-org-aman.onrender.com/allOrganData", {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+  
+        setOrganData(response.data.data);
+      } catch (error) {
+        setError(error.response?.data?.message || "Failed to fetch organ data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrganData();
+  }, []);
+
+ 
+
+  const handleWebinarSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        setMessage("Authorization token is missing.");
+        return;
+      }
+
+      const response = await axios.post(
+        "https://donix-org-aman.onrender.com/addWebinar",
+        webinar,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMessage(response.data.message);
+      setWebinar({ title: "", date: "", description: "", link: "" });
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message ||
+          "Failed to schedule webinar. Try again later."
+      );
+    }
+  };
+
+  const handleBlogSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        setMessage("Authorization token is missing.");
+        return;
+      }
+
+      const response = await axios.post("https://donix-org-aman.onrender.com/addBlog", blog, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+
+      setMessage(response.data.message);
+      setBlog({ title: "", description: "", imageUrl: "", donationLink: "" });
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message || "Failed to add blog. Try again later."
+      );
+    }
+  };
+
   return (
     <main className="flex-1 overflow-y-auto p-6">
       {/* Page Title */}

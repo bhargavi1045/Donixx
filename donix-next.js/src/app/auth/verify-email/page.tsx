@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
-const Page: React.FC = () => {
+const VerifyEmail: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token'); 
@@ -64,6 +64,14 @@ const Page: React.FC = () => {
         ) : null}
       </div>
     </div>
+  );
+};
+
+const Page: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="text-center">Loading...</div>}>
+      <VerifyEmail />
+    </Suspense>
   );
 };
 

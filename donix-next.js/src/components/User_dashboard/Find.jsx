@@ -1,25 +1,96 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
-interface Organ {
-  _id: string;
-  hospitalName: string;
-  hospitalId: string;
-  organ: string;
-  count: number;
-  bloodGroup: string;
-  price: number;
-}
 
 const Find = () => {
   const [organs, setOrgans] = useState([]);
-  const [expandedHospital, setExpandedHospital] = useState<string | null>(null); // Tracks which hospital's dropdown is expanded
-  const [selectedOrgan, setSelectedOrgan] = useState<Organ | null>(null); // Tracks the selected organ for the modal
-  const [showModal, setShowModal] = useState(false); // Controls the visibility of the modal
-  const [isSmallScreen, setIsSmallScreen] = useState(false); // Tracks if the screen is small
+  const [expandedHospital, setExpandedHospital] = useState(null); 
+  const [selectedOrgan, setSelectedOrgan] = useState(null); 
+  const [showModal, setShowModal] = useState(false); 
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [darkMode] = useState(true); 
 
+  // Fetch organ data from the API
+  useEffect(() => {
+    const fetchOrgans = async () => {
+      try {
+        const response = await fetch("https://donix-org-aman.onrender.com/fetchOrgan");
+        if (!response.ok) {
+          throw new Error("Failed to fetch organ data");
+        }
+        const data = await response.json();
+        setOrgans(data.organs);
+      } catch (error) {
+        console.error("Error fetching organ data:", error);
+      }
+    };
 
+    fetchOrgans();
+  }, []);
 
+  // Detect screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 768); // Small screen if width <= 768px
+    };
+
+    handleResize(); // Check on initial render
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Toggle dropdown for a specific hospital
+  const toggleDropdown = (hospitalName) => {
+    setExpandedHospital((prev) =>
+      prev === hospitalName ? null : hospitalName
+    );
+  };
+
+  // Handle organ selection
+  const handleOrganClick = (organ) => {
+    setSelectedOrgan(organ);
+    setShowModal(true);
+  };
+
+  // Handle request submission
+  const handleRequest = async () => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        alert("User not logged in!");
+        return;
+      }
+      if (!selectedOrgan) {
+        alert("No organ selected!");
+        return;
+      }
+
+      const response = await fetch("https://donix-org-aman.onrender.com/requestOrgan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          hospitalId: selectedOrgan.hospitalId,
+          organ: selectedOrgan.organ,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to request organ");
+      }
+
+      alert("Organ request submitted successfully!");
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error requesting organ:", error);
+      alert("Failed to request organ. Please try again.");
+    }
+  };
 
   return (
     <div className="p-6">
@@ -32,15 +103,15 @@ const Find = () => {
           </tr>
         </thead>
         <tbody>
-          {[...new Set(organs.map((item: Organ) => item.hospitalName))].map(
+          {[...new Set(organs.map((item) => item.hospitalName))].map(
             (hospitalName) => (
               <React.Fragment key={hospitalName}>
                 <tr>
                   <td className="border border-gray-300 p-3">{hospitalName}</td>
                   <td className="border border-gray-300 p-3">
                     {organs
-                      .filter((item: Organ) => item.hospitalName === hospitalName)
-                      .map((item: Organ) => item.organ)
+                      .filter((item) => item.hospitalName === hospitalName)
+                      .map((item) => item.organ)
                       .join(", ")}
                   </td>
                   <td className="border border-gray-300 p-3 text-center">
@@ -81,9 +152,9 @@ const Find = () => {
                         <tbody>
                           {organs
                             .filter(
-                              (item: Organ) => item.hospitalName === hospitalName
+                              (item) => item.hospitalName === hospitalName
                             )
-                            .map((item: Organ) => (
+                            .map((item) => (
                               <tr
                                 key={item._id}
                                 onClick={() =>

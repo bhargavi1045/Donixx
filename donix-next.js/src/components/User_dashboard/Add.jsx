@@ -12,16 +12,110 @@ const Add = () => {
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(true); 
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [selectedHospitalId, setSelectedHospitalId] = useState(null);
   const [organName, setOrganName] = useState("");
   const [formLink, setFormLink] = useState("");
   const [userName, setUserName] = useState("");
 
- 
+  useEffect(() => {
 
-  
+    const fetchHospitals = async () => {
+      try {
+        const response = await fetch("https://donix-org-aman.onrender.com/allHospitals");
+        if (!response.ok) {
+          throw new Error("Failed to fetch hospitals");
+        }
+        const data = await response.json();
+        setHospitals(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchUserName = async () => {
+      try {
+        const token = Cookies.get("token");
+        if (!token) {
+          toast.error("You must be logged in.");
+          return;
+        }
+
+        const response = await axios.post(
+          "https://donix-org-aman.onrender.com/getDetails",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUserName(response.data.user.fullName);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        toast.error("Failed to fetch user details.");
+      }
+    };
+
+    fetchHospitals();
+    fetchUserName();
+  }, []);
+
+  const handleBookAppointment = async () => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        toast.error("You must be logged in to book an appointment.");
+        return;
+      }
+
+      const response = await axios.post(
+        "https://donix-org-aman.onrender.com/bookAppointment",
+        {
+          name: userName,
+          organ: organName,
+          formLink: formLink,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+            hospitalid: selectedHospitalId,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success(
+          "Appointment booked successfully! You will be verified soon via email."
+        );
+        setOverlayVisible(false); // Close the overlay
+        setOrganName(""); // Reset input fields
+        setFormLink("");
+      }
+    } catch (error) {
+      console.error("Error booking appointment:", error);
+      toast.error("Failed to book appointment. Please try again.");
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Image
+          src="/Laoder_animation.gif"
+          alt="Loading..."
+          width={200}
+          height={200}
+          className="mx-auto"
+        />
+      </div>
+    );
+  if (error) return <div className="text-center p-6 text-red-500">{error}</div>;
+
   return (
     <div
       className={`overflow-x-auto shadow-md rounded-lg mt-5 ${
