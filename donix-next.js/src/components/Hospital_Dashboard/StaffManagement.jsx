@@ -79,18 +79,18 @@ const DoctorStaffManagement = () => {
         </div>
         <div className="flex items-center gap-4">
           <AiOutlineSearch size={20} />
-          {darkMode ? (
+          {/* {darkMode ? (
             <HiOutlineSun size={24} onClick={() => setDarkMode(!darkMode)} className="cursor-pointer" />
           ) : (
             <HiOutlineMoon size={24} onClick={() => setDarkMode(!darkMode)} className="cursor-pointer" />
-          )}
+          )} */}
           <div className="relative">
             <AiOutlineBell className="text-xl cursor-pointer" />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
           </div>
-          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+          {/* <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
             <AiOutlineUser />
-          </div>
+          </div> */}
         </div>
         
       </header>

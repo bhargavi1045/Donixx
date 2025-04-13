@@ -133,7 +133,7 @@ const Profile = () => {
                         <AiOutlineStar size={20} />
                         <span>Dashboards / Overview</span>
                     </div>
-                    <div className="flex items-center gap-4">
+                    {/* <div className="flex items-center gap-4">
                         <AiOutlineSearch size={20} />
                         {darkMode ? (
                             <HiOutlineSun size={24} onClick={() => setDarkMode(false)} className="cursor-pointer" />
@@ -142,7 +142,7 @@ const Profile = () => {
                         )}
                         <AiOutlineBell size={20} />
                         <div className="w-10 h-10 bg-gray-400 rounded-full"></div>
-                    </div>
+                    </div> */}
                 </div>
             </header>
 
