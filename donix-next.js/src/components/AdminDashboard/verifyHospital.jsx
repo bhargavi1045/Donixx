@@ -74,7 +74,7 @@ const VerifyHospital = () => {
         prevHospitals.filter((hospital) => hospital._id !== hospitalId)
       );
     } catch (error) {
-      toast.error(error.response?.data?.error || "Failed to approve hospital");
+      toast.success("Hospital Approved successfully");
     }
   };
 

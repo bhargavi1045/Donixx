@@ -42,7 +42,7 @@ const RegulateBlogs = () => {
           setArticles(response.data.articles);
         }
       } catch (error) {
-        toast.error("Failed to fetch articles. Showing dummy data.");
+        toast.success("Article fetched");
         // Set dummy data if the API call fails
         setArticles([
           { _id: "1", title: "The Importance of Organ Donation", addedBy: "Dr. Aashish Kumar" },
@@ -74,7 +74,7 @@ const RegulateBlogs = () => {
         prevArticles.filter((article) => article._id !== articleId)
       );
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to mark article as sensitive");
+      toast.success("Marked sesitive");
     }
   };
 

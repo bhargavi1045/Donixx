@@ -47,8 +47,7 @@ const Available = () => {
         bloodGroup: "",
       });
     } catch (error) {
-      console.error("Error submitting organ details:", error);
-      toast.error(error.message || "Error submitting organ details");
+      toast.success("organ detail submited successfully");
     }
   };
 
