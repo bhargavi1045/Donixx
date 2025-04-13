@@ -5,18 +5,26 @@ export const Verify = () => {
   const [isVerified, setIsVerified] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(true); 
   const [admins, setAdmins] = useState([]); // State to store admin details
   const [showAdmins, setShowAdmins] = useState(false); // State to toggle admin table visibility
 
   useEffect(() => {
-    const storedDarkMode = localStorage.getItem("darkMode");
-    setDarkMode(storedDarkMode === "1");
+   
 
     const fetchHospitalDetails = async () => {
       try {
-        const token = Cookies.get("token"); // Retrieve token from localStorage
-        if (!token) throw new Error("No token found");
+        const token = Cookies.get("token"); // Retrieve token from cookies
+        if (!token) {
+          // If no token, show dummy data
+          setIsVerified(false);
+          setAdmins([
+            { _id: "1", fullName: "Aman", email: "amanmis601@gmail.com" },
+            { _id: "2", fullName: "Aashish", email: "t620156@gmail.com" },
+          ]);
+          setShowAdmins(true);
+          return;
+        }
 
         const response = await fetch(
           "https://donix-org-aman.onrender.com/getHospitalDetails",
@@ -107,11 +115,7 @@ export const Verify = () => {
           </div>
           <button
             onClick={fetchAdmins}
-            className={`px-5 py-2 rounded-lg font-medium shadow-md hover:scale-105 transition-transform duration-200 ease-in-out ${
-              darkMode
-                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white"
-                : "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
-            }`}
+            className="px-5 py-2 rounded-lg font-medium shadow-md hover:scale-105 transition-transform duration-200 ease-in-out bg-gradient-to-r from-blue-600 to-blue-700 text-white"
           >
             Raise Issue to Superadmin
           </button>
@@ -135,12 +139,14 @@ export const Verify = () => {
                     {admin.fullName}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                  <button
-  onClick={() => window.location.href = `mailto:${admin.email}`}
-  className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium shadow-md hover:scale-105 hover:shadow-lg transition-transform duration-200 ease-in-out"
->
-  Contact {admin.email}
-</button>
+                    <button
+                      onClick={() =>
+                        (window.location.href = `mailto:${admin.email}`)
+                      }
+                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium shadow-md hover:scale-105 hover:shadow-lg transition-transform duration-200 ease-in-out"
+                    >
+                      Contact {admin.email}
+                    </button>
                   </td>
                 </tr>
               ))}

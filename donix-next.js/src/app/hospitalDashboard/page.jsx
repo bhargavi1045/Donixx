@@ -4,9 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoBagAddOutline } from "react-icons/io5";
 import { RiFindReplaceLine } from "react-icons/ri";
 import { VscLayoutActivitybarLeft } from "react-icons/vsc";
-// import { AiOutlineAccountBook } from "react-icons/ai";
-// import { IoIosChatbubbles } from "react-icons/io";
-import {  MdDomainVerification } from "react-icons/md";
+import { MdDomainVerification } from "react-icons/md";
 import { IoMdLogOut, IoMdClose } from "react-icons/io";
 import { FiMenu } from "react-icons/fi";
 import Profile from "../../components/Hospital_Dashboard/Profile";
@@ -30,10 +28,18 @@ const Dashboard = () => {
   useEffect(() => {
     const storedDarkMode = localStorage.getItem("darkMode");
     setDarkMode(storedDarkMode === "1");
+
     const fetchHospitalDetails = async () => {
       try {
-        const token = Cookies.get("token"); 
-        if (!token) throw new Error("No token found");
+        const token = Cookies.get("token");
+        if (!token) {
+          // Set dummy data if no token is found
+          setHospitalDetails({
+            hospitalName: "Apollo",
+            address: "123 Dummy Street",
+          });
+          return;
+        }
 
         const response = await fetch(
           "https://donix-org-aman.onrender.com/getHospitalDetails",
@@ -88,10 +94,6 @@ const Dashboard = () => {
             <StaffManagement />
           </div>
         );
-      case "Chat":
-        return <div className="text-gray-600">Chat</div>;
-      case "History":
-        return <div className="text-gray-600">History Content</div>;
       case "Verification":
         return (
           <div className="text-gray-600">
@@ -104,51 +106,9 @@ const Dashboard = () => {
             <Available />
           </div>
         );
-      case "Logout":
-        return <div className="text-gray-600">Logout Content</div>;
       default:
         return (
-          <div>
-            <div className="text-2xl text-gray-700 font-bold mb-6">
-              Today Tasks
-            </div>
-            <div className="flex justify-evenly border-b border-gray-300 pb-5 mb-5">
-              <label className="cursor-pointer font-medium text-gray-500 border-b-2 border-transparent hover:border-blue-500">
-                <input type="radio" name="nav" className="hidden" />
-                All
-              </label>
-              <label className="cursor-pointer font-medium text-gray-500 border-b-2 border-transparent hover:border-blue-500">
-                <input type="radio" name="nav" className="hidden" />
-                Important
-              </label>
-              <label className="cursor-pointer font-medium text-gray-500 border-b-2 border-transparent hover:border-blue-500">
-                <input type="radio" name="nav" className="hidden" />
-                Notes
-              </label>
-              <label className="cursor-pointer font-medium text-gray-500 border-b-2 border-transparent hover:border-blue-500">
-                <input type="radio" name="nav" className="hidden" />
-                Meetings
-              </label>
-              <label className="cursor-pointer font-medium text-gray-500 border-b-2 border-transparent hover:border-blue-500">
-                <input type="radio" name="nav" className="hidden" />
-                Family
-              </label>
-              <label className="cursor-pointer font-medium text-gray-500 border-b-2 border-transparent hover:border-blue-500">
-                <input type="radio" name="nav" className="hidden" />
-                Work
-              </label>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <input type="checkbox" className="mr-4" />
-                <div className="text-gray-600">Sample Task 1</div>
-              </div>
-              <div className="flex items-center">
-                <input type="checkbox" className="mr-4" />
-                <div className="text-gray-600">Sample Task 2</div>
-              </div>
-            </div>
-          </div>
+          <Profile />
         );
     }
   };
