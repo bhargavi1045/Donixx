@@ -43,5 +43,47 @@
 - **Containerization & Deployment** - Docker
 - **Languages** - Python , JavaScript
 
+## Installations
+### 1.Clone the Repository
+```bash 
+git clone "https://github.com/AashishKumarSingh1/Donix.git"
+```
+### 2.Create .env
+```bash
+cat > donix-gen.ai/.env
+GEMINI_API_KEY="your gemini api key"
+Image_Reader_Model="your image reader model"
+GROQ_MODEL="Your graq model"
+GROQ_API_KEY="your grq api key"
+```
+```bash
+cat >donix-next.js/.env
+NEXT_PUBLIC_BACKEND_ENDPOINT=http://localhost:10000
+NEXT_PUBLIC_GEN_AI_ENDPOINT=http://localhost:5000
+NEXT_PUBLIC_FRONTEND_ENDPOINT=http://localhost:3000
+```
+```bash
+cat >donix-typescript/.env
+PORT = 10000
+FRONTEND_ENDPOINT=http://localhost:3000
+BACKEND_ENDPOINT=http://localhost:10000
+MONGO_URI="your mongo db uri"
+JWT_SECRET="jwt secret key"
+SMTP_SERVICE=Mailgun
+SMTP_HOST=smtp.mailgun.org
+SMTP_PORT="smtp port number"
+SMTP_EMAIL = "your smtp email"
+SMTP_PASSWORD = "your smtp secret key
+```
+
+### 3.Starting the application
+```bash
+docker-compose up --build
+```
+
+### 4.Accessing the application
+```bash
+http://localhost:3000
+```
 ## Summary 
 Donix is not just a platform — it is a mission-driven initiative to make organ donation simpler, smarter, and safer. By integrating cutting-edge AI, a secure digital backbone, and human-centric design, Donix aims to transform India's organ donation landscape and save countless lives through better coordination and care.
